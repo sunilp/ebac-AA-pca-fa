@@ -1,12 +1,6 @@
 1 - Objective
 -------------
-
-LandOcean Energy Services Co., Ltd. (hereafter referred to simply as
-LandOcean) is a China-based company involved in providing various oil
-and gas solutions.
-
-We are examining the impact of several financial indicators such as rate
-of return on assets and sales margin, on LandOcean's stock price.
+This is a PCA analysis of stock prices in various Chinese stock markets... (to be elaborated)
 
 2 - Implementation
 ------------------
