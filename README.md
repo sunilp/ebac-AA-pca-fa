@@ -1,12 +1,9 @@
 1 - Objective
 -------------
 
-LandOcean Energy Services Co., Ltd. (hereafter referred to simply as
-LandOcean) is a China-based company involved in providing various oil
-and gas solutions.
+LandOcean Energy Services Co., Ltd. (hereafter referred to simply as LandOcean) is a China-based company involved in providing various oil and gas solutions. We are examining the impact of several financial indicators such as rate of return on assets and sales margin, on LandOcean's stock price.
 
-We are examining the impact of several financial indicators such as rate
-of return on assets and sales margin, on LandOcean's stock price.
+As there are several variables to handle, we will be implementing Principal Component Cnalysis (PCA) to reduce the dimensionality of the dataset and create new uncorrelated variables, so as to ensure an easier process of building the model.
 
 2 - Implementation
 ------------------
