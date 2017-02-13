@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Stock Analysis\"\nauthor: \"Gaelan Gu, Sunil Prakash, Rose Wang Ruoshi, Yolanda Yu Yue\"\ndate: \"11/02/2017\"\noutput: md_document\n---\n\n1 - Objective\n----------------\nLandOcean Energy Services Co., Ltd. (hereafter referred to simply as LandOcean) is a China-based company involved in providing various oil and gas solutions.\n\nWe are examining the impact of several financial indicators such as rate of return on assets and sales margin, on LandOcean's stock price.\n\n2 - Implementation\n----------------\n\n### Importing Stock Price Dataset\n```{r}\nstock = read.csv('stkpc_analysis.csv')\n```\n\n### Principal Component Analysis\n```{r}\nstock_pca = princomp(stock[, -1])\nsummary(stock_pca)\n\npca2 <- prcomp(stock[,-1])\nsummary(pca2)\n```\nWe can determine from the summary that the first 2 principal components (PCs) are sufficient to explain the variance in the variables - 96% to be precise.\n\nLet us visualize this discovery using a scree plot below.\n\n### Scree Plot\n```{r}\nscreeplot(stock_pca, type = 'line',\n          main = 'PCA on Stock Price')\n```\n\nAs it can be clearly seen in the scree plot, the first 2 PCs explain most of the variability as there is a sharp kink at PC3 when the line begins to straighten on the chart.\n\n### Biplot with *ggbiplot* package\n```{r}\nlibrary(ggbiplot)\ns = ggbiplot(stock_pca, obs.scale = 1, var.scale = 1, \n             ellipse = T, circle = T)\nprint(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))\n```\n\n\n### Train-Test Split with *caTools* package\n```{r}\n# install.packages('caTools')\nlibrary(caTools)\nset.seed(123)\n#split = sample.split(stock$`stock price `, SplitRatio = 0.8)\n#trainset = subset(stock, split == T)\n#testset = subset(stock, split == F)\n```\n\n### Applying PCA with *caret* package\n```{r} \n# install.packages('caret')\nlibrary(caret)\n#trans = preProcess(trainset[-1], method = c('scale', 'pca'), pcaComp = 2)\n#trainset = predict(trans, trainset)\n#testset = predict(trans, testset)\n```\n\n\nGenerate report\nrmarkdown::render(\n  input=\"stock.Rmd\", \n  output_format=\"md_document\", \n  output_file=\"README.md\"\n) \n\n",
+    "created" : 1486968612496.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "727357849",
+    "id" : "39645E64",
+    "lastKnownWriteTime" : 1486969690,
+    "last_content_update" : 1486969690456,
+    "path" : "~/Development/nus/assignments/EBAC_U3_AA_PCA_FA/stock.Rmd",
+    "project_path" : "stock.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

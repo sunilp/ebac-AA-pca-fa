@@ -1,0 +1,77 @@
+---
+title: "Stock Analysis"
+author: "Gaelan Gu, Sunil Prakash, Rose Wang Ruoshi, Yolanda Yu Yue"
+date: "11/02/2017"
+output: md_document
+---
+
+1 - Objective
+----------------
+LandOcean Energy Services Co., Ltd. (hereafter referred to simply as LandOcean) is a China-based company involved in providing various oil and gas solutions.
+
+We are examining the impact of several financial indicators such as rate of return on assets and sales margin, on LandOcean's stock price.
+
+2 - Implementation
+----------------
+
+### Importing Stock Price Dataset
+```{r}
+stock = read.csv('stkpc_analysis.csv')
+```
+
+### Principal Component Analysis
+```{r}
+stock_pca = princomp(stock[, -1])
+summary(stock_pca)
+
+pca2 <- prcomp(stock[,-1])
+summary(pca2)
+```
+We can determine from the summary that the first 2 principal components (PCs) are sufficient to explain the variance in the variables - 96% to be precise.
+
+Let us visualize this discovery using a scree plot below.
+
+### Scree Plot
+```{r}
+screeplot(stock_pca, type = 'line',
+          main = 'PCA on Stock Price')
+```
+
+As it can be clearly seen in the scree plot, the first 2 PCs explain most of the variability as there is a sharp kink at PC3 when the line begins to straighten on the chart.
+
+### Biplot with *ggbiplot* package
+```{r}
+library(ggbiplot)
+s = ggbiplot(stock_pca, obs.scale = 1, var.scale = 1, 
+             ellipse = T, circle = T)
+print(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))
+```
+
+
+### Train-Test Split with *caTools* package
+```{r}
+# install.packages('caTools')
+library(caTools)
+set.seed(123)
+#split = sample.split(stock$`stock price `, SplitRatio = 0.8)
+#trainset = subset(stock, split == T)
+#testset = subset(stock, split == F)
+```
+
+### Applying PCA with *caret* package
+```{r} 
+# install.packages('caret')
+library(caret)
+#trans = preProcess(trainset[-1], method = c('scale', 'pca'), pcaComp = 2)
+#trainset = predict(trans, trainset)
+#testset = predict(trans, testset)
+```
+
+
+Generate report
+rmarkdown::render(
+  input="stock.Rmd", 
+  output_format="md_document", 
+  output_file="README.md"
+) 
+
