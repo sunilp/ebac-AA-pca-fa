@@ -21,19 +21,22 @@ stock = read.csv('stkpc_analysis.csv')
 
 ### Principal Component Analysis
 ```{r}
-stock_pca = princomp(stock[, -1])
-summary(stock_pca)
+#stock_pca = princomp(stock[, -1])
+#summary(stock_pca)
 
-pca2 <- prcomp(stock[,-1])
+pca <- prcomp(stock[2:17],center = TRUE, scale. =TRUE)
+pca2 <- pca <- prcomp(stock[2:17]) #without scaling
 summary(pca2)
+
+print(pca)
 ```
-We can determine from the summary that the first 2 principal components (PCs) are sufficient to explain the variance in the variables - 96% to be precise.
+We can determine from the summary that the first 4 principal components (PCs) are sufficient to explain the variance in the variables - 99% to be precise.
 
 Let us visualize this discovery using a scree plot below.
 
-### Scree Plot
+### Scree Plot 
 ```{r}
-screeplot(stock_pca, type = 'line',
+screeplot(pca2, type = 'l',
           main = 'PCA on Stock Price')
 ```
 
@@ -42,21 +45,75 @@ As it can be clearly seen in the scree plot, the first 2 PCs explain most of the
 ### Biplot with *ggbiplot* package
 ```{r}
 library(ggbiplot)
-s = ggbiplot(stock_pca, obs.scale = 1, var.scale = 1, 
+s = ggbiplot(pca2, obs.scale = 1, var.scale = 1, 
              ellipse = T, circle = T)
 print(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))
+```
+
+### clustering
+
+```{r}
+
+library(devtools)
+install_github("ggbiplot", "vqv")
+ 
+stock_price <- stock[,1]
+
+stock_category <- lapply(stock_price, function(price){
+  if(price <= 20){
+    return("LOW")
+  }else if(price > 20 &  price <= 40 ){
+    return ("NORMAL")
+  }else if(price > 40  &  price <= 55 ){
+    return ("HIGH")
+  }else if( price > 55 ){
+    return ("V.HIGH")
+  }else {
+    print("some garbage")
+    print(price)
+    return(NA)
+  }
+})
+
+stock_category <- as.factor(unlist(stock_category))
+
+hist(stock_price)
+
+library(ggbiplot)
+g <- ggbiplot(pca, obs.scale = 1, var.scale = 1, 
+              groups = stock_category, ellipse = TRUE, 
+              circle = TRUE)
+
+g <- g + scale_color_discrete(name = '')
+g <- g + theme(legend.direction = 'horizontal', 
+               legend.position = 'top')
+print(g)
+
 ```
 
 
 ### Train-Test Split with *caTools* package
 ```{r}
 # install.packages('caTools')
-library(caTools)
-set.seed(123)
+stock.re <- data.frame(pca$x)
+fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4, data=stock.re)
+summary(fit1)
+
+
+#library(caTools)
+#set.seed(123)
 #split = sample.split(stock$`stock price `, SplitRatio = 0.8)
 #trainset = subset(stock, split == T)
 #testset = subset(stock, split == F)
 ```
+
+```{r}
+
+plot(fit1)
+
+
+```
+
 
 ### Applying PCA with *caret* package
 ```{r} 

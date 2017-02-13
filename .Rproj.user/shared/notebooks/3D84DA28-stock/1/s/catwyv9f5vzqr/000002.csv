@@ -1,5 +1,0 @@
-"0","split = sample.split(stock$`stock price `, SplitRatio = 0.8)
-"
-"2","Error in sample.split(stock$`stock price `, SplitRatio = 0.8) : 
-  Error in sample.split: 'SplitRatio' parameter has to be i [0, 1] range or [1, length(Y)] range
-"
