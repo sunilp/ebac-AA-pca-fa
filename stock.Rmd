@@ -28,6 +28,9 @@ pca <- prcomp(stock[2:17],center = TRUE, scale. =TRUE)
 pca2 <-  prcomp(stock[2:17]) #without scaling
 summary(pca2)
 
+ev <- pca$sdev^2
+
+
 print(pca)
 ```
 We can determine from the summary that the first 4 principal components (PCs) are sufficient to explain the variance in the variables - 99% to be precise.
@@ -96,7 +99,7 @@ print(g)
 ```{r}
 # install.packages('caTools')
 stock.re <- data.frame(pca$x)
-fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4, data=stock.re)
+fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4 + stock.re$PC5 + stock.re$PC6, data=stock.re)
 summary(fit1)
 
 

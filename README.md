@@ -38,6 +38,9 @@ of return on assets and sales margin, on LandOcean's stock price.
     ## Proportion of Variance 0.00000 0.00000 0.00000 0.000000
     ## Cumulative Proportion  1.00000 1.00000 1.00000 1.000000
 
+    ev <- pca$sdev^2
+
+
     print(pca)
 
     ## Standard deviations:
@@ -194,7 +197,7 @@ Let us visualize this discovery using a scree plot below.
     screeplot(pca2, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-33-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-18-1.png)
 
 As it can be clearly seen in the scree plot, the first 2 PCs explain
 most of the variability as there is a sharp kink at PC3 when the line
@@ -207,7 +210,7 @@ begins to straighten on the chart.
                  ellipse = T, circle = T)
     print(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-34-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-19-1.png)
 
 ### clustering
 
@@ -236,7 +239,7 @@ begins to straighten on the chart.
 
     hist(stock_price)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-35-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-20-1.png)
 
     library(ggbiplot)
     g <- ggbiplot(pca, obs.scale = 1, var.scale = 1, 
@@ -248,37 +251,39 @@ begins to straighten on the chart.
                    legend.position = 'top')
     print(g)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-35-2.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-20-2.png)
 
 ### Train-Test Split with *caTools* package
 
     # install.packages('caTools')
     stock.re <- data.frame(pca$x)
-    fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4, data=stock.re)
+    fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4 + stock.re$PC5 + stock.re$PC6, data=stock.re)
     summary(fit1)
 
     ## 
     ## Call:
     ## lm(formula = stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + 
-    ##     stock.re$PC4, data = stock.re)
+    ##     stock.re$PC4 + stock.re$PC5 + stock.re$PC6, data = stock.re)
     ## 
     ## Residuals:
     ##     Min      1Q  Median      3Q     Max 
-    ## -14.064  -6.920  -2.294   4.429  48.629 
+    ## -18.839  -6.766  -2.134   4.499  49.698 
     ## 
     ## Coefficients:
     ##              Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)   17.4862     0.5355  32.652  < 2e-16 ***
-    ## stock.re$PC1  -1.5872     0.2492  -6.370 6.75e-10 ***
-    ## stock.re$PC2   0.3690     0.2878   1.282    0.201    
-    ## stock.re$PC3   0.1370     0.4168   0.329    0.743    
-    ## stock.re$PC4  -0.6799     0.4756  -1.430    0.154    
+    ## (Intercept)   17.4862     0.5298  33.005  < 2e-16 ***
+    ## stock.re$PC1  -1.5872     0.2465  -6.439 4.57e-10 ***
+    ## stock.re$PC2   0.3690     0.2847   1.296  0.19592    
+    ## stock.re$PC3   0.1370     0.4123   0.332  0.73983    
+    ## stock.re$PC4  -0.6799     0.4705  -1.445  0.14939    
+    ## stock.re$PC5   0.5311     0.4935   1.076  0.28268    
+    ## stock.re$PC6  -1.4644     0.5295  -2.766  0.00602 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 9.55 on 313 degrees of freedom
-    ## Multiple R-squared:  0.1242, Adjusted R-squared:  0.113 
-    ## F-statistic: 11.09 on 4 and 313 DF,  p-value: 1.995e-08
+    ## Residual standard error: 9.448 on 311 degrees of freedom
+    ## Multiple R-squared:  0.1483, Adjusted R-squared:  0.1318 
+    ## F-statistic: 9.024 on 6 and 311 DF,  p-value: 4.228e-09
 
     #library(caTools)
     #set.seed(123)
@@ -288,7 +293,7 @@ begins to straighten on the chart.
 
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-37-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-37-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-37-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-37-4.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-22-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-22-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-22-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-22-4.png)
 
 ### Applying PCA with *caret* package
 
