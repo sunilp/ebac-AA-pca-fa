@@ -1,12 +1,8 @@
 1 - Objective
 -------------
-<<<<<<< HEAD
 
 This is a PCA analysis of stock prices in various Chinese stock
 markets... (to be elaborated)
-=======
-This is a PCA analysis of stock prices in various Chinese stock markets... (to be elaborated)
->>>>>>> 511bb2062d2a4261a225f1a24fded04a80de90bb
 
 2 - Implementation
 ------------------
@@ -245,7 +241,7 @@ Let us visualize this discovery using a scree plot below.
     screeplot(pca, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-90-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
 As it can be clearly seen in the scree plot, the first 2 PCs explain
 most of the variability as there is a sharp kink at PC3 when the line
@@ -258,7 +254,7 @@ begins to straighten on the chart.
                  ellipse = T, circle = T)
     print(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-91-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
 ### clustering
 
@@ -287,7 +283,7 @@ begins to straighten on the chart.
 
     hist(stock_price)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-92-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
     library(ggbiplot)
     g <- ggbiplot(pca, obs.scale = 1, var.scale = 1, 
@@ -299,12 +295,12 @@ begins to straighten on the chart.
                    legend.position = 'top')
     print(g)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-92-2.png) \#\#\#
+![](README_files/figure-markdown_strict/unnamed-chunk-5-2.png) \#\#\#
 biplot
 
     biplot(pca, scale = TRUE, expand = 2)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-93-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 #### Selecting Princial Components
 
@@ -355,7 +351,7 @@ Lets visualize it
 
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-96-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-96-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-96-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-96-4.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-9-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-9-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-9-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-9-4.png)
 
 ### Cluster Analysis foe components
 
@@ -363,7 +359,7 @@ Lets visualize it
 
     plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-97-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
 Here are twelve 2-D projections of data which are in a 6-D space. You
 can see there’s a clear outlier in all the dimensions, as well as some
@@ -385,7 +381,7 @@ Lets visualize in 3d space
     for (i in 2:16) wss[i] <- sum(kmeans(stock,centers=i)$withinss)
     plot(1:16, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
 
-![](README_files/figure-markdown_strict/unnamed-chunk-99-1.png) So here
+![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png) So here
 we can see that the “elbow” in the scree plot is at k=5, so we apply the
 k-means clustering function with k = 5 and plot.
 
@@ -396,7 +392,7 @@ k-means clustering function with k = 5 and plot.
     palette(alpha(brewer.pal(9,'Set1'), 0.5))
     plot(comp, col=k$clust, pch=16)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-100-1.png) Here,
+![](README_files/figure-markdown_strict/unnamed-chunk-13-1.png) Here,
 few outliers, with 2 ans 3. Lets visualize with 3d plot
 
     plot3d(comp$PC1, comp$PC2, comp$PC3, col=k$clust)
@@ -408,14 +404,14 @@ few outliers, with 2 ans 3. Lets visualize with 3d plot
     sort(table(k$clust))
 
     ## 
-    ##   4   5   2   3   1 
-    ##   1   3  75 105 134
+    ##   4   2   1   3   5 
+    ##   1   3  81 112 121
 
     clust <- names(sort(table(k$clust)))
 
     print(clust)
 
-    ## [1] "4" "5" "2" "3" "1"
+    ## [1] "4" "2" "1" "3" "5"
 
 Generate report rmarkdown::render( input="stock.Rmd",
 output\_format="md\_document", output\_file="README.md" )
