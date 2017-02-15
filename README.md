@@ -1,8 +1,12 @@
 1 - Objective
 -------------
+<<<<<<< HEAD
 
 This is a PCA analysis of stock prices in various Chinese stock
 markets... (to be elaborated)
+=======
+This is a PCA analysis of stock prices in various Chinese stock markets... (to be elaborated)
+>>>>>>> 511bb2062d2a4261a225f1a24fded04a80de90bb
 
 2 - Implementation
 ------------------
