@@ -1,12 +1,8 @@
 1 - Objective
 -------------
 
-LandOcean Energy Services Co., Ltd. (hereafter referred to simply as
-LandOcean) is a China-based company involved in providing various oil
-and gas solutions.
-
-We are examining the impact of several financial indicators such as rate
-of return on assets and sales margin, on LandOcean's stock price.
+This is a PCA analysis of stock prices in various Chinese stock
+markets... (to be elaborated)
 
 2 - Implementation
 ------------------
@@ -14,6 +10,57 @@ of return on assets and sales margin, on LandOcean's stock price.
 ### Importing Stock Price Dataset
 
     stock = read.csv('stkpc_analysis.csv')
+    head(stock)
+
+    ##   stock.price rate.of.return.on.total.assets_ROA_A net.assets.income.rateA
+    ## 1       21.61                             0.121386                0.132871
+    ## 2       11.56                             0.146654                0.154035
+    ## 3       14.70                             0.154913                0.208913
+    ## 4       12.75                             0.070378                0.080534
+    ## 5        7.11                             0.027733                0.033302
+    ## 6       19.80                             0.113251                0.127485
+    ##   operating.profit.ratio Sales.Margin.rate turnover.of.account.receivableA
+    ## 1               0.290876          0.302877                        1.973517
+    ## 2               0.459153          0.397007                        2.378458
+    ## 3               0.174533          0.152238                       26.698053
+    ## 4               0.122215          0.195572                        2.311944
+    ## 5               0.080283          0.067811                        2.630343
+    ## 6               0.223832          0.218812                        5.722892
+    ##   rate.of.stock.turnoverA velocity.of.liquid.assetsA
+    ## 1                4.704993                   0.628905
+    ## 2                1.403312                   0.544518
+    ## 3                3.314591                   1.361672
+    ## 4                1.824801                   0.603102
+    ## 5                3.510590                   0.607223
+    ## 6                3.772615                   0.881164
+    ##   turnover.of.total.capitalA liquidity.ratio quick.ratio
+    ## 1                   0.400777        7.907656    7.535940
+    ## 2                   0.369400       15.521238   14.264261
+    ## 3                   1.017569        2.891113    2.308431
+    ## 4                   0.359856        4.855210    4.095397
+    ## 5                   0.408977        4.124295    3.634091
+    ## 6                   0.517572        5.362788    5.021824
+    ##   asset.liability.ratio equity.multiplier Total.Assets.Growth.RateA
+    ## 1              0.086434          1.094612                  0.074916
+    ## 2              0.047916          1.050327                  0.125825
+    ## 3              0.258480          1.348580                  0.285072
+    ## 4              0.126114          1.144313                  0.055495
+    ## 5              0.167224          1.200803                 -0.028447
+    ## 6              0.111658          1.125693                  0.081640
+    ##   net.profit.growth.rateA increase.rate.of.business.revenue
+    ## 1                0.735358                          0.404529
+    ## 2               -0.135686                          0.079896
+    ## 3                2.945090                          0.968384
+    ## 4                0.057540                          0.225008
+    ## 5              -14.120561                          0.219988
+    ## 6               -0.026540                          0.145946
+    ##   sustainable.growth.rate
+    ## 1                0.093065
+    ## 2                0.108911
+    ## 3                0.167203
+    ## 4                0.076830
+    ## 5                0.001099
+    ## 6                0.050509
 
 ### Principal Component Analysis
 
@@ -22,24 +69,21 @@ of return on assets and sales margin, on LandOcean's stock price.
 
     pca <- prcomp(stock[2:17],center = TRUE, scale. =TRUE)
     pca2 <-  prcomp(stock[2:17]) #without scaling
-    summary(pca2)
+    summary(pca)
 
     ## Importance of components:
-    ##                            PC1     PC2      PC3     PC4     PC5     PC6
-    ## Standard deviation     71.6624 43.3849 13.33084 9.79269 0.82403 0.53630
-    ## Proportion of Variance  0.7042  0.2581  0.02437 0.01315 0.00009 0.00004
-    ## Cumulative Proportion   0.7042  0.9623  0.98666 0.99981 0.99990 0.99994
-    ##                            PC7     PC8     PC9   PC10   PC11    PC12
-    ## Standard deviation     0.43383 0.35443 0.29950 0.1471 0.1095 0.05253
-    ## Proportion of Variance 0.00003 0.00002 0.00001 0.0000 0.0000 0.00000
-    ## Cumulative Proportion  0.99996 0.99998 0.99999 1.0000 1.0000 1.00000
-    ##                           PC13    PC14    PC15     PC16
-    ## Standard deviation     0.04193 0.03893 0.01511 0.008628
-    ## Proportion of Variance 0.00000 0.00000 0.00000 0.000000
-    ## Cumulative Proportion  1.00000 1.00000 1.00000 1.000000
-
-    ev <- pca$sdev^2
-
+    ##                           PC1    PC2    PC3     PC4     PC5     PC6
+    ## Standard deviation     2.1526 1.8636 1.2870 1.12791 1.07534 1.00220
+    ## Proportion of Variance 0.2896 0.2171 0.1035 0.07951 0.07227 0.06277
+    ## Cumulative Proportion  0.2896 0.5067 0.6102 0.68971 0.76198 0.82476
+    ##                            PC7     PC8     PC9    PC10    PC11    PC12
+    ## Standard deviation     0.93517 0.83553 0.76182 0.58420 0.37911 0.25505
+    ## Proportion of Variance 0.05466 0.04363 0.03627 0.02133 0.00898 0.00407
+    ## Cumulative Proportion  0.87941 0.92305 0.95932 0.98065 0.98963 0.99370
+    ##                           PC13    PC14    PC15    PC16
+    ## Standard deviation     0.22086 0.17649 0.13389 0.05467
+    ## Proportion of Variance 0.00305 0.00195 0.00112 0.00019
+    ## Cumulative Proportion  0.99675 0.99869 0.99981 1.00000
 
     print(pca)
 
@@ -194,10 +238,10 @@ Let us visualize this discovery using a scree plot below.
 
 ### Scree Plot
 
-    screeplot(pca2, type = 'l',
+    screeplot(pca, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-18-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-90-1.png)
 
 As it can be clearly seen in the scree plot, the first 2 PCs explain
 most of the variability as there is a sharp kink at PC3 when the line
@@ -210,7 +254,7 @@ begins to straighten on the chart.
                  ellipse = T, circle = T)
     print(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-19-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-91-1.png)
 
 ### clustering
 
@@ -239,7 +283,7 @@ begins to straighten on the chart.
 
     hist(stock_price)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-20-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-92-1.png)
 
     library(ggbiplot)
     g <- ggbiplot(pca, obs.scale = 1, var.scale = 1, 
@@ -251,9 +295,27 @@ begins to straighten on the chart.
                    legend.position = 'top')
     print(g)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-20-2.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-92-2.png) \#\#\#
+biplot
 
-### Train-Test Split with *caTools* package
+    biplot(pca, scale = TRUE, expand = 2)
+
+![](README_files/figure-markdown_strict/unnamed-chunk-93-1.png)
+
+#### Selecting Princial Components
+
+    ev <- pca$sdev^2
+
+    print(ev)
+
+    ##  [1] 4.63374849 3.47304513 1.65634120 1.27219009 1.15635905 1.00439849
+    ##  [7] 0.87453769 0.69810936 0.58036587 0.34128443 0.14372716 0.06504970
+    ## [13] 0.04877853 0.03114990 0.01792618 0.00298872
+
+Here, till 6 components , eigen values are &gt;1, so will discard
+others.
+
+### Regression Analysis with PCA components
 
     # install.packages('caTools')
     stock.re <- data.frame(pca$x)
@@ -285,23 +347,71 @@ begins to straighten on the chart.
     ## Multiple R-squared:  0.1483, Adjusted R-squared:  0.1318 
     ## F-statistic: 9.024 on 6 and 311 DF,  p-value: 4.228e-09
 
-    #library(caTools)
-    #set.seed(123)
-    #split = sample.split(stock$`stock price `, SplitRatio = 0.8)
-    #trainset = subset(stock, split == T)
-    #testset = subset(stock, split == F)
+Lets visualize it
 
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-22-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-22-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-22-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-22-4.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-96-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-96-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-96-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-96-4.png)
 
-### Applying PCA with *caret* package
+### Cluster Analysis foe components
 
-    # install.packages('caret')
-    library(caret)
-    #trans = preProcess(trainset[-1], method = c('scale', 'pca'), pcaComp = 2)
-    #trainset = predict(trans, trainset)
-    #testset = predict(trans, testset)
+#### Analysing the components (taking 6 PC)
+
+    plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
+
+![](README_files/figure-markdown_strict/unnamed-chunk-97-1.png)
+
+Here are twelve 2-D projections of data which are in a 6-D space. You
+can see there’s a clear outlier in all the dimensions, as well as some
+bunching together in the different projections.
+
+Lets visualize in 3d space
+
+    library(rgl)
+    # Multi 3D plot
+    comp <- stock.re[1:6]
+    plot3d(comp$PC1, comp$PC2, comp$PC3)
+    plot3d(comp$PC4, comp$PC5, comp$PC6)
+    plot3d(comp$PC1, comp$PC3, comp$PC4)
+
+#### K-mean Clustering
+
+    # Determine number of clusters
+    wss <- (nrow(stock)-1)*sum(apply(stock,2,var))
+    for (i in 2:16) wss[i] <- sum(kmeans(stock,centers=i)$withinss)
+    plot(1:16, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
+
+![](README_files/figure-markdown_strict/unnamed-chunk-99-1.png) So here
+we can see that the “elbow” in the scree plot is at k=5, so we apply the
+k-means clustering function with k = 5 and plot.
+
+    # Apply k-means with k=4
+    k <- kmeans(comp, 5, nstart=25, iter.max=1000)
+    library(RColorBrewer)
+    library(scales)
+    palette(alpha(brewer.pal(9,'Set1'), 0.5))
+    plot(comp, col=k$clust, pch=16)
+
+![](README_files/figure-markdown_strict/unnamed-chunk-100-1.png) Here,
+few outliers, with 2 ans 3. Lets visualize with 3d plot
+
+    plot3d(comp$PC1, comp$PC2, comp$PC3, col=k$clust)
+    plot3d(comp$PC4, comp$PC5, comp$PC6, col=k$clust)
+
+#### Naming the clusters
+
+    #Sorting based on cluster sizes
+    sort(table(k$clust))
+
+    ## 
+    ##   4   5   2   3   1 
+    ##   1   3  75 105 134
+
+    clust <- names(sort(table(k$clust)))
+
+    print(clust)
+
+    ## [1] "4" "5" "2" "3" "1"
 
 Generate report rmarkdown::render( input="stock.Rmd",
 output\_format="md\_document", output\_file="README.md" )

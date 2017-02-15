@@ -7,9 +7,8 @@ output: md_document
 
 1 - Objective
 ----------------
-LandOcean Energy Services Co., Ltd. (hereafter referred to simply as LandOcean) is a China-based company involved in providing various oil and gas solutions.
 
-We are examining the impact of several financial indicators such as rate of return on assets and sales margin, on LandOcean's stock price.
+This is a PCA analysis of stock prices in various Chinese stock markets... (to be elaborated)
 
 2 - Implementation
 ----------------
@@ -17,6 +16,7 @@ We are examining the impact of several financial indicators such as rate of retu
 ### Importing Stock Price Dataset
 ```{r}
 stock = read.csv('stkpc_analysis.csv')
+head(stock)
 ```
 
 ### Principal Component Analysis
@@ -26,9 +26,7 @@ stock = read.csv('stkpc_analysis.csv')
 
 pca <- prcomp(stock[2:17],center = TRUE, scale. =TRUE)
 pca2 <-  prcomp(stock[2:17]) #without scaling
-summary(pca2)
-
-ev <- pca$sdev^2
+summary(pca)
 
 
 print(pca)
@@ -39,7 +37,7 @@ Let us visualize this discovery using a scree plot below.
 
 ### Scree Plot 
 ```{r}
-screeplot(pca2, type = 'l',
+screeplot(pca, type = 'l',
           main = 'PCA on Stock Price')
 ```
 
@@ -93,22 +91,35 @@ g <- g + theme(legend.direction = 'horizontal',
 print(g)
 
 ```
+### biplot
+
+```{r}
+biplot(pca, scale = TRUE, expand = 2)
+	
+```
 
 
-### Train-Test Split with *caTools* package
+#### Selecting Princial Components
+```{r}
+
+ev <- pca$sdev^2
+
+print(ev)
+```
+
+Here, till 6 components , eigen values are >1, so will discard others.
+
+
+### Regression Analysis with PCA components
 ```{r}
 # install.packages('caTools')
 stock.re <- data.frame(pca$x)
 fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4 + stock.re$PC5 + stock.re$PC6, data=stock.re)
 summary(fit1)
 
-
-#library(caTools)
-#set.seed(123)
-#split = sample.split(stock$`stock price `, SplitRatio = 0.8)
-#trainset = subset(stock, split == T)
-#testset = subset(stock, split == F)
 ```
+
+Lets visualize it
 
 ```{r}
 
@@ -118,13 +129,61 @@ plot(fit1)
 ```
 
 
-### Applying PCA with *caret* package
+### Cluster Analysis foe components
+
+#### Analysing the components (taking 6 PC)
 ```{r} 
-# install.packages('caret')
-library(caret)
-#trans = preProcess(trainset[-1], method = c('scale', 'pca'), pcaComp = 2)
-#trainset = predict(trans, trainset)
-#testset = predict(trans, testset)
+plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
+```
+
+ Here are twelve 2-D projections of data which are in a 6-D space. You can see there’s a clear outlier in all the dimensions, as well as some bunching together in the different projections.
+ 
+ Lets visualize in 3d space
+ 
+```{r}
+library(rgl)
+# Multi 3D plot
+comp <- stock.re[1:6]
+plot3d(comp$PC1, comp$PC2, comp$PC3)
+plot3d(comp$PC4, comp$PC5, comp$PC6)
+plot3d(comp$PC1, comp$PC3, comp$PC4)
+```
+
+#### K-mean Clustering
+
+```{r}
+# Determine number of clusters
+wss <- (nrow(stock)-1)*sum(apply(stock,2,var))
+for (i in 2:16) wss[i] <- sum(kmeans(stock,centers=i)$withinss)
+plot(1:16, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
+```
+So here we can see that the “elbow” in the scree plot is at k=5, so we apply the k-means clustering function with k = 5 and plot.
+
+```{r}
+# Apply k-means with k=4
+k <- kmeans(comp, 5, nstart=25, iter.max=1000)
+library(RColorBrewer)
+library(scales)
+palette(alpha(brewer.pal(9,'Set1'), 0.5))
+plot(comp, col=k$clust, pch=16)
+
+```
+Here, few outliers, with 2 ans 3. Lets visualize with 3d plot
+
+```{r}
+plot3d(comp$PC1, comp$PC2, comp$PC3, col=k$clust)
+plot3d(comp$PC4, comp$PC5, comp$PC6, col=k$clust)
+```
+
+#### Naming the clusters
+
+```{r}
+#Sorting based on cluster sizes
+sort(table(k$clust))
+clust <- names(sort(table(k$clust)))
+
+print(clust)
+
 ```
 
 

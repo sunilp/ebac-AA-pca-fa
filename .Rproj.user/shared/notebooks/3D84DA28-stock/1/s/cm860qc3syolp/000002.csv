@@ -1,4 +1,0 @@
-"0","stock = read_csv('stkpc_analysis.csv')
-"
-"2","Error: could not find function ""read_csv""
-"
