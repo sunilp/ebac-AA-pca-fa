@@ -8,6 +8,7 @@ output: md_document
 1 - Objective
 ----------------
 
+
 This is a PCA analysis of stock prices in various Chinese stock markets... (to be elaborated)
 
 2 - Implementation
