@@ -10,57 +10,7 @@ markets... (to be elaborated)
 ### Importing Stock Price Dataset
 
     stock = read.csv('stkpc_analysis.csv')
-    head(stock)
-
-    ##   stock.price rate.of.return.on.total.assets_ROA_A net.assets.income.rateA
-    ## 1       21.61                             0.121386                0.132871
-    ## 2       11.56                             0.146654                0.154035
-    ## 3       14.70                             0.154913                0.208913
-    ## 4       12.75                             0.070378                0.080534
-    ## 5        7.11                             0.027733                0.033302
-    ## 6       19.80                             0.113251                0.127485
-    ##   operating.profit.ratio Sales.Margin.rate turnover.of.account.receivableA
-    ## 1               0.290876          0.302877                        1.973517
-    ## 2               0.459153          0.397007                        2.378458
-    ## 3               0.174533          0.152238                       26.698053
-    ## 4               0.122215          0.195572                        2.311944
-    ## 5               0.080283          0.067811                        2.630343
-    ## 6               0.223832          0.218812                        5.722892
-    ##   rate.of.stock.turnoverA velocity.of.liquid.assetsA
-    ## 1                4.704993                   0.628905
-    ## 2                1.403312                   0.544518
-    ## 3                3.314591                   1.361672
-    ## 4                1.824801                   0.603102
-    ## 5                3.510590                   0.607223
-    ## 6                3.772615                   0.881164
-    ##   turnover.of.total.capitalA liquidity.ratio quick.ratio
-    ## 1                   0.400777        7.907656    7.535940
-    ## 2                   0.369400       15.521238   14.264261
-    ## 3                   1.017569        2.891113    2.308431
-    ## 4                   0.359856        4.855210    4.095397
-    ## 5                   0.408977        4.124295    3.634091
-    ## 6                   0.517572        5.362788    5.021824
-    ##   asset.liability.ratio equity.multiplier Total.Assets.Growth.RateA
-    ## 1              0.086434          1.094612                  0.074916
-    ## 2              0.047916          1.050327                  0.125825
-    ## 3              0.258480          1.348580                  0.285072
-    ## 4              0.126114          1.144313                  0.055495
-    ## 5              0.167224          1.200803                 -0.028447
-    ## 6              0.111658          1.125693                  0.081640
-    ##   net.profit.growth.rateA increase.rate.of.business.revenue
-    ## 1                0.735358                          0.404529
-    ## 2               -0.135686                          0.079896
-    ## 3                2.945090                          0.968384
-    ## 4                0.057540                          0.225008
-    ## 5              -14.120561                          0.219988
-    ## 6               -0.026540                          0.145946
-    ##   sustainable.growth.rate
-    ## 1                0.093065
-    ## 2                0.108911
-    ## 3                0.167203
-    ## 4                0.076830
-    ## 5                0.001099
-    ## 6                0.050509
+    #summary(stock)
 
 ### Principal Component Analysis
 
@@ -241,7 +191,7 @@ Let us visualize this discovery using a scree plot below.
     screeplot(pca, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 As it can be clearly seen in the scree plot, the first 2 PCs explain
 most of the variability as there is a sharp kink at PC3 when the line
@@ -254,7 +204,7 @@ begins to straighten on the chart.
                  ellipse = T, circle = T)
     print(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 ### clustering
 
@@ -283,7 +233,7 @@ begins to straighten on the chart.
 
     hist(stock_price)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
     library(ggbiplot)
     g <- ggbiplot(pca, obs.scale = 1, var.scale = 1, 
@@ -295,12 +245,12 @@ begins to straighten on the chart.
                    legend.position = 'top')
     print(g)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-5-2.png) \#\#\#
+![](README_files/figure-markdown_strict/unnamed-chunk-7-2.png) \#\#\#
 biplot
 
     biplot(pca, scale = TRUE, expand = 2)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
 #### Selecting Princial Components
 
@@ -351,7 +301,7 @@ Lets visualize it
 
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-9-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-9-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-9-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-9-4.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-11-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-11-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-11-4.png)
 
 ### Cluster Analysis foe components
 
@@ -359,7 +309,7 @@ Lets visualize it
 
     plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
 Here are twelve 2-D projections of data which are in a 6-D space. You
 can see there’s a clear outlier in all the dimensions, as well as some
@@ -381,18 +331,18 @@ Lets visualize in 3d space
     for (i in 2:16) wss[i] <- sum(kmeans(stock,centers=i)$withinss)
     plot(1:16, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
 
-![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png) So here
+![](README_files/figure-markdown_strict/unnamed-chunk-14-1.png) So here
 we can see that the “elbow” in the scree plot is at k=5, so we apply the
 k-means clustering function with k = 5 and plot.
 
-    # Apply k-means with k=4
+    # Apply k-means with k=5
     k <- kmeans(comp, 5, nstart=25, iter.max=1000)
     library(RColorBrewer)
     library(scales)
     palette(alpha(brewer.pal(9,'Set1'), 0.5))
     plot(comp, col=k$clust, pch=16)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-13-1.png) Here,
+![](README_files/figure-markdown_strict/unnamed-chunk-15-1.png) Here,
 few outliers, with 2 ans 3. Lets visualize with 3d plot
 
     plot3d(comp$PC1, comp$PC2, comp$PC3, col=k$clust)
@@ -404,14 +354,14 @@ few outliers, with 2 ans 3. Lets visualize with 3d plot
     sort(table(k$clust))
 
     ## 
-    ##   4   2   1   3   5 
-    ##   1   3  81 112 121
+    ##   2   4   1   5   3 
+    ##   1   1  74  82 160
 
     clust <- names(sort(table(k$clust)))
 
     print(clust)
 
-    ## [1] "4" "2" "1" "3" "5"
+    ## [1] "2" "4" "1" "5" "3"
 
 Generate report rmarkdown::render( input="stock.Rmd",
 output\_format="md\_document", output\_file="README.md" )

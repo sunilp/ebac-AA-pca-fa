@@ -16,7 +16,7 @@ This is a PCA analysis of stock prices in various Chinese stock markets... (to b
 ### Importing Stock Price Dataset
 ```{r}
 stock = read.csv('stkpc_analysis.csv')
-head(stock)
+#summary(stock)
 ```
 
 ### Principal Component Analysis
@@ -160,7 +160,7 @@ plot(1:16, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of s
 So here we can see that the “elbow” in the scree plot is at k=5, so we apply the k-means clustering function with k = 5 and plot.
 
 ```{r}
-# Apply k-means with k=4
+# Apply k-means with k=5
 k <- kmeans(comp, 5, nstart=25, iter.max=1000)
 library(RColorBrewer)
 library(scales)
