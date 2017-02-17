@@ -1,24 +1,25 @@
 1 - Objective
 -------------
 
-This is a PCA analysis of stock prices in various Chinese stock
-markets... (to be elaborated)
+This is an analysis of the stock prices of 300 high-tech companies based
+in China, using 16 financial indicators as independent variables. In
+order to reduce the dimensionality of the dataset, we will be performing
+Principal Component Analysis (PCA) on the data. After which, we will
+attempt to fit a regression to the data and conduct K-means clustering
+on the sample.
 
-2 - Implementation
-------------------
+2 - Implementation - PCA
+------------------------
 
 ### Importing Stock Price Dataset
 
-    stock = read.csv('stkpc_analysis.csv')
-    #summary(stock)
+    stock = read.csv('stkpc_analysis1.csv',header=T, sep=",", row.names=1)
+    stock2 = read.csv('stkpc_analysis1.csv')
 
-### Principal Component Analysis
+### Principal Component Analysis (PCA)
 
-    #stock_pca = princomp(stock[, -1])
-    #summary(stock_pca)
-
-    pca <- prcomp(stock[2:17],center = TRUE, scale. =TRUE)
-    pca2 <-  prcomp(stock[2:17]) #without scaling
+    pca <- prcomp(stock[2:17], center = TRUE, scale. =TRUE)
+    pca2 <-  prcomp(stock2[3:18], center = TRUE, scale. =TRUE) #without scaling
     summary(pca)
 
     ## Importance of components:
@@ -180,9 +181,8 @@ markets... (to be elaborated)
     ## increase.rate.of.business.revenue    -0.0026678458
     ## sustainable.growth.rate               0.0117809962
 
-We can determine from the summary that the first 4 principal components
-(PCs) are sufficient to explain the variance in the variables - 99% to
-be precise.
+We have created 2 PCA objects, one with scaling and the other without,
+as a backup.
 
 Let us visualize this discovery using a scree plot below.
 
@@ -191,84 +191,59 @@ Let us visualize this discovery using a scree plot below.
     screeplot(pca, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-215-1.png)
 
-As it can be clearly seen in the scree plot, the first 2 PCs explain
-most of the variability as there is a sharp kink at PC3 when the line
-begins to straighten on the chart.
+It may not be immediately clear which PCs we should select as the kink
+in the scree plot at PC3 may not be sufficient to explain the
+variability of the diagram.
 
-### Biplot with *ggbiplot* package
+We will take a look at their eigenvalues to decide which PCs should be
+selected.
 
-    library(ggbiplot)
-    s = ggbiplot(pca2, obs.scale = 1, var.scale = 1, 
-                 ellipse = T, circle = T)
-    print(s + coord_cartesian(xlim = c(-200, 200), ylim = c(-200, 200)))
-
-![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
-
-### clustering
-
-    library(devtools)
-    #install_github("ggbiplot", "vqv")
-     
-    stock_price <- stock[,1]
-
-    stock_category <- lapply(stock_price, function(price){
-      if(price <= 20){
-        return("LOW")
-      }else if(price > 20 &  price <= 40 ){
-        return ("NORMAL")
-      }else if(price > 40  &  price <= 55 ){
-        return ("HIGH")
-      }else if( price > 55 ){
-        return ("V.HIGH")
-      }else {
-        print("some garbage")
-        print(price)
-        return(NA)
-      }
-    })
-
-    stock_category <- as.factor(unlist(stock_category))
-
-    hist(stock_price)
-
-![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png)
-
-    library(ggbiplot)
-    g <- ggbiplot(pca, obs.scale = 1, var.scale = 1, 
-                  groups = stock_category, ellipse = TRUE, 
-                  circle = TRUE)
-
-    g <- g + scale_color_discrete(name = '')
-    g <- g + theme(legend.direction = 'horizontal', 
-                   legend.position = 'top')
-    print(g)
-
-![](README_files/figure-markdown_strict/unnamed-chunk-7-2.png) \#\#\#
-biplot
-
-    biplot(pca, scale = TRUE, expand = 2)
-
-![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
-
-#### Selecting Princial Components
+#### Selecting Principal Components
 
     ev <- pca$sdev^2
-
     print(ev)
 
     ##  [1] 4.63374849 3.47304513 1.65634120 1.27219009 1.15635905 1.00439849
     ##  [7] 0.87453769 0.69810936 0.58036587 0.34128443 0.14372716 0.06504970
     ## [13] 0.04877853 0.03114990 0.01792618 0.00298872
 
-Here, till 6 components , eigen values are &gt;1, so will discard
-others.
+The first 6 PCs have eigenvalues above 1, thus we will discard the rest.
+Cumulatively, the 6 PCs explain 82.5% of the variance in the data, which
+should be sufficient for our needs.
+
+The first 4 PCs seem to be relatively strongly correlated (about -0.40)
+to various financial indicators tied to company assets, such as rate of
+return on total assets and liquidity ratio. These correlations are
+considered strong as compared to the other variables, which have
+correlations even lower than -/+ 0.40. This would suggest that these 4
+PCs would increase with decreasing asset-based financial ratios.
+
+PC5 is very highly correlated with net profit growth rate, which
+indicates that this PC is very likely to rise the quicker the company's
+net profit grows. The 6th and last PC is negatively correlated with the
+rate of stock turnover, which suggests that the slower that stock is
+sold or used the higher PC6 increases. However, this is not surprising
+in the high-tech industry as capital equipment is not frequently
+replaced or sold.
+
+### Visualization of Orthogonal Variables
+
+    biplot(pca2, scale = TRUE, expand = 2)
+
+![](README_files/figure-markdown_strict/unnamed-chunk-217-1.png) We
+visualize the orthogonal variables for the first 2 PCs, using the above
+biplot.
+
+3 - Implementation - Regression
+-------------------------------
 
 ### Regression Analysis with PCA components
 
     # install.packages('caTools')
     stock.re <- data.frame(pca$x)
+    stock.re$stock_price = stock$stock.price
     fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4 + stock.re$PC5 + stock.re$PC6, data=stock.re)
     summary(fit1)
 
@@ -297,26 +272,39 @@ others.
     ## Multiple R-squared:  0.1483, Adjusted R-squared:  0.1318 
     ## F-statistic: 9.024 on 6 and 311 DF,  p-value: 4.228e-09
 
-Lets visualize it
+From the summary of the regression fit, we can tell that PC1 and PC6 are
+significant in the fit. However, the overall model is not a good fit as
+told by the adjust R-squared indicator of 13.2%.
 
+    par(mfrow = c(2, 2))
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-11-2.png)![](README_files/figure-markdown_strict/unnamed-chunk-11-3.png)![](README_files/figure-markdown_strict/unnamed-chunk-11-4.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-219-1.png) From
+the diagnostic plots, we can see that the model does not follow that of
+a linear regression. There is a visible curve in the Normal Q-Q plots,
+thus it does not adhere to the dotted straight line. In the
+Scale-Location plot, we do not see a straight red line and points which
+are very closely positioned together.
 
-### Cluster Analysis foe components
+Thus a linear regression model is not strong enough to predict the
+results of this model. There are also a couple of outlier in the
+dataset, identified in the Residuals vs Leverage plot which can
+drastically affect the overall analysis when removed.
 
-#### Analysing the components (taking 6 PC)
+### Cluster Analysis of PCs
+
+#### Analysing the Components (taking 6 PCs)
 
     plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-220-1.png) Here
+are twelve 2-D projections of data which are in a 6-D space. You can see
+there’s a clear outlier in all the dimensions, as well as some bunching
+together in the different projections.
 
-Here are twelve 2-D projections of data which are in a 6-D space. You
-can see there’s a clear outlier in all the dimensions, as well as some
-bunching together in the different projections.
+Let us visualize in a 3-D space below.
 
-Lets visualize in 3d space
-
+    # install.packages('rgl')
     library(rgl)
     # Multi 3D plot
     comp <- stock.re[1:6]
@@ -324,44 +312,88 @@ Lets visualize in 3d space
     plot3d(comp$PC4, comp$PC5, comp$PC6)
     plot3d(comp$PC1, comp$PC3, comp$PC4)
 
+<img src="comp$PC1-comp$PC2-comp$PC3.png" alt="&quot;1,2,3&quot;" style="width:50.0%" />
+Comparing PC1, PC2, PC3
+
+<img src="comp$PC4-comp$PC5-comp$PC6.png" alt="&quot;4,5,6&quot;" style="width:50.0%" />
+Comparing PC4, PC5, PC6
+
+<img src="comp$PC1-comp$PC3-comp$PC4.png" alt="&quot;1,3,4&quot;" style="width:50.0%" />
+Comparing PC1, PC3 and PC4
+
 #### K-mean Clustering
 
+    # Reset Within-Cluster Sum of Squares
+    wcss = vector()
     # Determine number of clusters
-    wss <- (nrow(stock)-1)*sum(apply(stock,2,var))
-    for (i in 2:16) wss[i] <- sum(kmeans(stock,centers=i)$withinss)
-    plot(1:16, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
+    for (i in 1:10) wcss[i] = sum(kmeans(stock[2:17], i)$withinss)
+    plot(1:10, wcss, type = 'b', 
+         main = paste('Clusters of Companies'), 
+         xlab = 'Number of clusters',
+         ylab = 'WCSS')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-14-1.png) So here
-we can see that the “elbow” in the scree plot is at k=5, so we apply the
-k-means clustering function with k = 5 and plot.
+![](README_files/figure-markdown_strict/unnamed-chunk-222-1.png) So here
+we can see that the “elbow” in the scree plot is at k = 4, so we apply
+the k-means clustering function with k = 4 and plot.
 
-    # Apply k-means with k=5
-    k <- kmeans(comp, 5, nstart=25, iter.max=1000)
+    # Apply k-means with k=4
+    comp = stock.re[1:6]
+    k <- kmeans(comp, 4, nstart=25, iter.max=1000)
     library(RColorBrewer)
     library(scales)
     palette(alpha(brewer.pal(9,'Set1'), 0.5))
-    plot(comp, col=k$clust, pch=16)
+    plot(comp[1:6], col=k$clust, pch=16)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-15-1.png) Here,
-few outliers, with 2 ans 3. Lets visualize with 3d plot
+![](README_files/figure-markdown_strict/unnamed-chunk-223-1.png) Here,
+few outliers, with 2 and 3. Lets visualize with 3d plot
 
     plot3d(comp$PC1, comp$PC2, comp$PC3, col=k$clust)
     plot3d(comp$PC4, comp$PC5, comp$PC6, col=k$clust)
 
+<img src="comp$PC1-comp$PC2-comp$PC3-clust.png" alt="&quot;1,3,4&quot;" style="width:50.0%" />
+Comparing PC1, PC2 and PC3 with K-mean clustering
+
+<img src="comp$PC4-comp$PC5-comp$PC6-clust.png" alt="&quot;1,3,4&quot;" style="width:50.0%" />
+Comparing PC4, PC5 and PC6 with K-mean clustering
+
 #### Naming the clusters
 
     #Sorting based on cluster sizes
-    sort(table(k$clust))
+    table(k$clust)
 
     ## 
-    ##   2   4   1   5   3 
-    ##   1   1  74  82 160
+    ##   1   2   3   4 
+    ##  81 111   1 125
 
     clust <- names(sort(table(k$clust)))
+    clust
 
-    print(clust)
+    ## [1] "3" "1" "2" "4"
 
-    ## [1] "2" "4" "1" "5" "3"
+    head(k$clust)
+
+    ##           Beijing Ultrapower Software Co.,LTD 
+    ##                                             4 
+    ##  Lepu Medical Technology (Beijing) Co., Ltd.  
+    ##                                             4 
+    ##               Toread Holdings Group Co., Ltd. 
+    ##                                             1 
+    ##            Henan Hanwei Electronics Co.,Ltd.  
+    ##                                             4 
+    ## Bestway Marine & Energy Technology Co., Ltd.  
+    ##                                             2 
+    ##    Anhui Anke Biotechnology (Group) Co., Ltd  
+    ##                                             4
+
+    hist(k$clust)
+
+![](README_files/figure-markdown_strict/unnamed-chunk-225-1.png) We Can
+Categorize different Clusters as
+
+1.  Enery Companies - 109 companies
+2.  Techonology Companies - 128 companies
+3.  PhotoElectric Companies - 1 Company
+4.  Raw Material Companies - 80 Companies
 
 Generate report rmarkdown::render( input="stock.Rmd",
 output\_format="md\_document", output\_file="README.md" )
