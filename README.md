@@ -191,7 +191,7 @@ Let us visualize this discovery using a scree plot below.
     screeplot(pca, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-215-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
 It may not be immediately clear which PCs we should select as the kink
 in the scree plot at PC3 may not be sufficient to explain the
@@ -232,9 +232,10 @@ replaced or sold.
 
     biplot(pca2, scale = TRUE, expand = 2)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-217-1.png) We
-visualize the orthogonal variables for the first 2 PCs, using the above
-biplot.
+![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+
+We visualize the orthogonal variables for the first 2 PCs, using the
+above biplot.
 
 3 - Implementation - Regression
 -------------------------------
@@ -279,9 +280,9 @@ told by the adjust R-squared indicator of 13.2%.
     par(mfrow = c(2, 2))
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-219-1.png) From
-the diagnostic plots, we can see that the model does not follow that of
-a linear regression. There is a visible curve in the Normal Q-Q plots,
+![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png) From the
+diagnostic plots, we can see that the model does not follow that of a
+linear regression. There is a visible curve in the Normal Q-Q plots,
 thus it does not adhere to the dotted straight line. In the
 Scale-Location plot, we do not see a straight red line and points which
 are very closely positioned together.
@@ -297,10 +298,11 @@ drastically affect the overall analysis when removed.
 
     plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-220-1.png) Here
-are twelve 2-D projections of data which are in a 6-D space. You can see
-there’s a clear outlier in all the dimensions, as well as some bunching
-together in the different projections.
+![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+
+Here are twelve 2-D projections of data which are in a 6-D space. You
+can see there’s a clear outlier in all the dimensions, as well as some
+bunching together in the different projections.
 
 Let us visualize in a 3-D space below.
 
@@ -313,12 +315,15 @@ Let us visualize in a 3-D space below.
     plot3d(comp$PC1, comp$PC3, comp$PC4)
 
 <img src="comp$PC1-comp$PC2-comp$PC3.png" alt="&quot;1,2,3&quot;" style="width:50.0%" />
+
 Comparing PC1, PC2, PC3
 
 <img src="comp$PC4-comp$PC5-comp$PC6.png" alt="&quot;4,5,6&quot;" style="width:50.0%" />
+
 Comparing PC4, PC5, PC6
 
 <img src="comp$PC1-comp$PC3-comp$PC4.png" alt="&quot;1,3,4&quot;" style="width:50.0%" />
+
 Comparing PC1, PC3 and PC4
 
 #### K-mean Clustering
@@ -332,9 +337,10 @@ Comparing PC1, PC3 and PC4
          xlab = 'Number of clusters',
          ylab = 'WCSS')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-222-1.png) So here
-we can see that the “elbow” in the scree plot is at k = 4, so we apply
-the k-means clustering function with k = 4 and plot.
+![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+
+So here we can see that the “elbow” in the scree plot is at k = 4, so we
+apply the k-means clustering function with k = 4 and plot.
 
     # Apply k-means with k=4
     comp = stock.re[1:6]
@@ -344,16 +350,19 @@ the k-means clustering function with k = 4 and plot.
     palette(alpha(brewer.pal(9,'Set1'), 0.5))
     plot(comp[1:6], col=k$clust, pch=16)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-223-1.png) Here,
-few outliers, with 2 and 3. Lets visualize with 3d plot
+![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+
+Here, few outliers, with 2 and 3. Lets visualize with 3d plot
 
     plot3d(comp$PC1, comp$PC2, comp$PC3, col=k$clust)
     plot3d(comp$PC4, comp$PC5, comp$PC6, col=k$clust)
 
-<img src="comp$PC1-comp$PC2-comp$PC3-clust.png" alt="&quot;1,3,4&quot;" style="width:50.0%" />
+!["1,2,4"](comp$PC1-comp$PC2-comp$PC3-clust.png){ width:100px; }
+
 Comparing PC1, PC2 and PC3 with K-mean clustering
 
 <img src="comp$PC4-comp$PC5-comp$PC6-clust.png" alt="&quot;1,3,4&quot;" style="width:50.0%" />
+
 Comparing PC4, PC5 and PC6 with K-mean clustering
 
 #### Naming the clusters
@@ -363,32 +372,33 @@ Comparing PC4, PC5 and PC6 with K-mean clustering
 
     ## 
     ##   1   2   3   4 
-    ##  81 111   1 125
+    ##   1 215  99   3
 
     clust <- names(sort(table(k$clust)))
     clust
 
-    ## [1] "3" "1" "2" "4"
+    ## [1] "1" "4" "3" "2"
 
     head(k$clust)
 
     ##           Beijing Ultrapower Software Co.,LTD 
-    ##                                             4 
+    ##                                             2 
     ##  Lepu Medical Technology (Beijing) Co., Ltd.  
-    ##                                             4 
+    ##                                             2 
     ##               Toread Holdings Group Co., Ltd. 
-    ##                                             1 
+    ##                                             3 
     ##            Henan Hanwei Electronics Co.,Ltd.  
-    ##                                             4 
+    ##                                             2 
     ## Bestway Marine & Energy Technology Co., Ltd.  
     ##                                             2 
     ##    Anhui Anke Biotechnology (Group) Co., Ltd  
-    ##                                             4
+    ##                                             2
 
     hist(k$clust)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-225-1.png) We Can
-Categorize different Clusters as
+![](README_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+
+We Can Categorize different Clusters as
 
 1.  Enery Companies - 109 companies
 2.  Techonology Companies - 128 companies

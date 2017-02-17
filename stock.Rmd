@@ -27,6 +27,7 @@ summary(pca)
 
 print(pca)
 ```
+
 We have created 2 PCA objects, one with scaling and the other without, as a backup.
 
 Let us visualize this discovery using a scree plot below.
@@ -47,6 +48,7 @@ ev <- pca$sdev^2
 print(ev)
 ```
 
+
 The first 6 PCs have eigenvalues above 1, thus we will discard the rest. Cumulatively, the 6 PCs explain 82.5% of the variance in the data, which should be sufficient for our needs.
 
 The first 4 PCs seem to be relatively strongly correlated (about -0.40) to various financial indicators tied to company assets, such as rate of return on total assets and liquidity ratio. These correlations are considered strong as compared to the other variables, which have correlations even lower than -/+ 0.40. This would suggest that these 4 PCs would increase with decreasing asset-based financial ratios.
@@ -58,6 +60,7 @@ PC5 is very highly correlated with net profit growth rate, which indicates that 
 ```{r}
 biplot(pca2, scale = TRUE, expand = 2)
 ```
+
 We visualize the orthogonal variables for the first 2 PCs, using the above biplot.
 
 3 - Implementation - Regression
@@ -71,6 +74,7 @@ stock.re$stock_price = stock$stock.price
 fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC4 + stock.re$PC5 + stock.re$PC6, data=stock.re)
 summary(fit1)
 ```
+
 From the summary of the regression fit, we can tell that PC1 and PC6 are significant in the fit. However, the overall model is not a good fit as told by the adjust R-squared indicator of 13.2%.
 
 ```{r}
@@ -88,6 +92,7 @@ Thus a linear regression model is not strong enough to predict the results of th
 ```{r} 
 plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
 ```
+
 Here are twelve 2-D projections of data which are in a 6-D space. You can see there’s a clear outlier in all the dimensions, as well as some bunching together in the different projections.
 
 Let us visualize in a 3-D space below.
@@ -103,12 +108,15 @@ plot3d(comp$PC1, comp$PC3, comp$PC4)
 ```
 
 !["1,2,3"](comp$PC1-comp$PC2-comp$PC3.png){ width=50% }
+
 Comparing PC1, PC2, PC3
 
 !["4,5,6"](comp$PC4-comp$PC5-comp$PC6.png){ width=50% }
+
 Comparing PC4, PC5, PC6
 
 !["1,3,4"](comp$PC1-comp$PC3-comp$PC4.png){ width=50% }
+
 Comparing PC1, PC3 and PC4
 
 #### K-mean Clustering
@@ -123,6 +131,7 @@ plot(1:10, wcss, type = 'b',
      xlab = 'Number of clusters',
      ylab = 'WCSS')
 ```
+
 So here we can see that the “elbow” in the scree plot is at k = 4, so we apply the k-means clustering function with k = 4 and plot.
 
 ```{r}
@@ -134,16 +143,21 @@ library(scales)
 palette(alpha(brewer.pal(9,'Set1'), 0.5))
 plot(comp[1:6], col=k$clust, pch=16)
 ```
+
 Here, few outliers, with 2 and 3. Lets visualize with 3d plot
 
 ```{r}
 plot3d(comp$PC1, comp$PC2, comp$PC3, col=k$clust)
 plot3d(comp$PC4, comp$PC5, comp$PC6, col=k$clust)
 ```
-!["1,3,4"](comp$PC1-comp$PC2-comp$PC3-clust.png){ width=50% }
+!["1,2,4"](comp$PC1-comp$PC2-comp$PC3-clust.png){ width:100px; }
+
+
+
 Comparing PC1, PC2 and PC3 with K-mean clustering
 
 !["1,3,4"](comp$PC4-comp$PC5-comp$PC6-clust.png){ width=50% }
+
 Comparing PC4, PC5 and PC6 with K-mean clustering
 
 #### Naming the clusters
@@ -158,6 +172,8 @@ head(k$clust)
 hist(k$clust)
 
 ```
+
+
 We Can Categorize different Clusters as
 
 1. Enery Companies -  109 companies
