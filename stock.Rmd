@@ -24,7 +24,7 @@ stock2 = read.csv('stkpc_analysis1.csv')
 ```{r}
 
 pca <- prcomp(stock[2:17], center = TRUE, scale. =TRUE)
-pca2 <-  prcomp(stock2[3:18], center = TRUE, scale. =TRUE) #without scaling
+pca2 <-  prcomp(stock2[3:18], center = TRUE, scale. =TRUE)
 summary(pca)
 
 
@@ -35,9 +35,6 @@ summary(pca)
 ```{r}
 print(pca$rotation)
 ```
-
-
-We have created 2 PCA objects, one with scaling and the other without, as a backup.
 
 Let us visualize this discovery using a scree plot below.
 
@@ -72,17 +69,21 @@ biplot(pca2, scale = TRUE, expand = 2)
 
 We visualize the orthogonal variables for the first 2 PCs, using the above biplot.
 
+<<<<<<< Updated upstream
 ### Naming Prinipal Components
 
 ```{r}
 pca$rotation[,1:2]
 ```
 
-Here, we can see for PC1, the Velocity of liquid Assets , Asset Liablity ratio and Equity multiplier is having negative correlation with everything else, i.e the more assets , likely to have stronger stock price.
+Here, we can see for PC1, the Velocity of Liquid Assets, Asset Liablity Ratio and Equity Multiplier are having negative correlation with all the other variables, i.e the more assets a company has, the more likely it is to have a higher stock price.
+
 So, we can call PC1 as "Strong Equity Assets".
 
-For PC2, its intresting as, sales margin , liquidity and quick ratio have neagive impact , comparing to everything else, but sales marin rate is almost negligible. So liquidity and quick ratio have inverse propostion on stock price. so we can call PC2 as "Lower Liquidity holding"
+For PC2, it is interesting as sales margin, liquidity and quick ratio have negative impact, compared to everything else, but sales margin rate is almost negligible. So liquidity and quick ratios are inversely proportionate to stock price, so we can refer to PC2 as "Lower Liquidity holding"
 
+=======
+>>>>>>> Stashed changes
 
 3 - Implementation - Regression
 ----------------
@@ -96,18 +97,20 @@ fit1<- lm(stock_price ~ stock.re$PC1 + stock.re$PC2 + stock.re$PC3 + stock.re$PC
 summary(fit1)
 ```
 
-From the summary of the regression fit, we can tell that PC1 and PC6 are significant in the fit. However, the overall model is not a good fit as told by the adjust R-squared indicator of 13.2%.
+From the summary of the regression fit, we can tell that PC1 and PC6 are significant in the fit. However, the overall model is not a good fit as told by the adjusted R-squared indicator of 13.2%.
 
 ```{r}
 par(mfrow = c(2, 2))
 plot(fit1)
 ```
+
 From the diagnostic plots, we can see that the model does not follow that of a linear regression. There is a visible curve in the Normal Q-Q plots, thus it does not adhere to the dotted straight line. In the Scale-Location plot, we do not see a straight red line and points which are very closely positioned together.
 
-Thus a linear regression model is not strong enough to predict the results of this model. There are also a couple of outlier in the dataset, identified in the Residuals vs Leverage plot which can drastically affect the overall analysis when removed.
+Thus a linear regression model is not strong enough to predict the results of this model. There are also a couple of outliers in the dataset, identified in the Residuals vs Leverage plot which can drastically affect the overall analysis when removed.
 
 
-### Cluster Analysis of PCs
+4 - Implementation - Cluster Analysis
+----------------
 
 #### Analysing the Components (taking 6 PCs)
 ```{r} 
@@ -188,19 +191,19 @@ Comparing PC4, PC5 and PC6 with K-mean clustering
 table(k$clust)
 clust <- names(sort(table(k$clust)))
 clust
-head(k$clust)
+head(k$clust, 10)
 
-hist(k$clust)
-
+hist(k$clust, xaxt = 'n', xlab = 'Clusters', main = 'Histogram of Companies in Clusters')
+axis(side = 1, at = seq(0, 4, by = 1))
 ```
 
 
-We Can Categorize different Clusters as
+We can categorize the different clusters as:
 
-1. Enery Companies -  109 companies
-2. Techonology Companies - 128 companies
-3. PhotoElectric Companies - 1 Company
-4. Raw Material Companies - 80 Companies
+1. Techonology Companies - 128 companies
+2. Raw Material Companies - 80 companies
+3. Energy Companies -  109 companies
+4. Photoclectric Companies - 1 Company
 
 
 
