@@ -187,7 +187,7 @@ Let us visualize this discovery using a scree plot below.
     screeplot(pca, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-17-1.png)
 
 It may not be immediately clear which PCs we should select as the kink
 in the scree plot at PC3 may not be sufficient to explain the
@@ -228,10 +228,43 @@ replaced or sold.
 
     biplot(pca2, scale = TRUE, expand = 2)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-19-1.png)
 
 We visualize the orthogonal variables for the first 2 PCs, using the
 above biplot.
+
+### Naming Prinipal Components
+
+    pca$rotation[,1:2]
+
+    ##                                              PC1          PC2
+    ## rate.of.return.on.total.assets_ROA_A -0.44224402  0.073868053
+    ## net.assets.income.rateA              -0.43565462  0.149695050
+    ## operating.profit.ratio               -0.41838654  0.011077526
+    ## Sales.Margin.rate                    -0.42846830 -0.002899346
+    ## turnover.of.account.receivableA      -0.01160320  0.122693913
+    ## rate.of.stock.turnoverA              -0.04008024  0.004083312
+    ## velocity.of.liquid.assetsA            0.01283187  0.358002946
+    ## turnover.of.total.capitalA           -0.01206318  0.352915222
+    ## liquidity.ratio                      -0.09623227 -0.380577724
+    ## quick.ratio                          -0.09877442 -0.379858199
+    ## asset.liability.ratio                 0.17587925  0.405077262
+    ## equity.multiplier                     0.15531869  0.372018976
+    ## Total.Assets.Growth.RateA            -0.07761889  0.275792499
+    ## net.profit.growth.rateA              -0.02705228  0.009669171
+    ## increase.rate.of.business.revenue    -0.13920350  0.044294057
+    ## sustainable.growth.rate              -0.39208811  0.185697955
+
+Here, we can see for PC1, the Velocity of liquid Assets , Asset Liablity
+ratio and Equity multiplier is having negative correlation with
+everything else, i.e the more assets , likely to have stronger stock
+price. So, we can call PC1 as "Strong Equity Assets".
+
+For PC2, its intresting as, sales margin , liquidity and quick ratio
+have neagive impact , comparing to everything else, but sales marin rate
+is almost negligible. So liquidity and quick ratio have inverse
+propostion on stock price. so we can call PC2 as "Lower Liquidity
+holding"
 
 3 - Implementation - Regression
 -------------------------------
@@ -276,7 +309,7 @@ told by the adjust R-squared indicator of 13.2%.
     par(mfrow = c(2, 2))
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png) From the
+![](README_files/figure-markdown_strict/unnamed-chunk-22-1.png) From the
 diagnostic plots, we can see that the model does not follow that of a
 linear regression. There is a visible curve in the Normal Q-Q plots,
 thus it does not adhere to the dotted straight line. In the
@@ -294,7 +327,7 @@ drastically affect the overall analysis when removed.
 
     plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-23-1.png)
 
 Here are twelve 2-D projections of data which are in a 6-D space. You
 can see there’s a clear outlier in all the dimensions, as well as some
@@ -333,7 +366,7 @@ Comparing PC1, PC3 and PC4
          xlab = 'Number of clusters',
          ylab = 'WCSS')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-25-1.png)
 
 So here we can see that the “elbow” in the scree plot is at k = 4, so we
 apply the k-means clustering function with k = 4 and plot.
@@ -346,7 +379,7 @@ apply the k-means clustering function with k = 4 and plot.
     palette(alpha(brewer.pal(9,'Set1'), 0.5))
     plot(comp[1:6], col=k$clust, pch=16)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-26-1.png)
 
 Here, few outliers, with 2 and 3. Lets visualize with 3d plot
 
@@ -368,31 +401,31 @@ Comparing PC4, PC5 and PC6 with K-mean clustering
 
     ## 
     ##   1   2   3   4 
-    ## 159   1  84  74
+    ##   1 138  83  96
 
     clust <- names(sort(table(k$clust)))
     clust
 
-    ## [1] "2" "4" "3" "1"
+    ## [1] "1" "3" "4" "2"
 
     head(k$clust)
 
     ##           Beijing Ultrapower Software Co.,LTD 
-    ##                                             1 
+    ##                                             2 
     ##  Lepu Medical Technology (Beijing) Co., Ltd.  
-    ##                                             1 
+    ##                                             2 
     ##               Toread Holdings Group Co., Ltd. 
     ##                                             3 
     ##            Henan Hanwei Electronics Co.,Ltd.  
-    ##                                             1 
+    ##                                             2 
     ## Bestway Marine & Energy Technology Co., Ltd.  
     ##                                             4 
     ##    Anhui Anke Biotechnology (Group) Co., Ltd  
-    ##                                             1
+    ##                                             2
 
     hist(k$clust)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-28-1.png)
 
 We Can Categorize different Clusters as
 

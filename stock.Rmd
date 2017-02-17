@@ -72,6 +72,18 @@ biplot(pca2, scale = TRUE, expand = 2)
 
 We visualize the orthogonal variables for the first 2 PCs, using the above biplot.
 
+### Naming Prinipal Components
+
+```{r}
+pca$rotation[,1:2]
+```
+
+Here, we can see for PC1, the Velocity of liquid Assets , Asset Liablity ratio and Equity multiplier is having negative correlation with everything else, i.e the more assets , likely to have stronger stock price.
+So, we can call PC1 as "Strong Equity Assets".
+
+For PC2, its intresting as, sales margin , liquidity and quick ratio have neagive impact , comparing to everything else, but sales marin rate is almost negligible. So liquidity and quick ratio have inverse propostion on stock price. so we can call PC2 as "Lower Liquidity holding"
+
+
 3 - Implementation - Regression
 ----------------
 
