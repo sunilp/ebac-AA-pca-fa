@@ -18,7 +18,9 @@ This is an analysis of the stock prices of 300 high-tech companies based in Chin
 stock = read.csv('stkpc_analysis1.csv',header=T, sep=",", row.names=1)
 stock2 = read.csv('stkpc_analysis1.csv')
 ```
+
 ### Principal Component Analysis (PCA)
+
 ```{r}
 
 pca <- prcomp(stock[2:17], center = TRUE, scale. =TRUE)

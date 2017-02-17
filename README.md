@@ -36,14 +36,10 @@ on the sample.
     ## Proportion of Variance 0.00305 0.00195 0.00112 0.00019
     ## Cumulative Proportion  0.99675 0.99869 0.99981 1.00000
 
-    print(pca)
+##### Rotations of PCA
 
-    ## Standard deviations:
-    ##  [1] 2.15261434 1.86361078 1.28698920 1.12791404 1.07534136 1.00219683
-    ##  [7] 0.93516720 0.83552939 0.76181748 0.58419554 0.37911364 0.25504843
-    ## [13] 0.22085861 0.17649334 0.13388870 0.05466919
-    ## 
-    ## Rotation:
+    print(pca$rotation)
+
     ##                                              PC1          PC2          PC3
     ## rate.of.return.on.total.assets_ROA_A -0.44224402  0.073868053 -0.043174643
     ## net.assets.income.rateA              -0.43565462  0.149695050  0.002659954
@@ -191,7 +187,7 @@ Let us visualize this discovery using a scree plot below.
     screeplot(pca, type = 'l',
               main = 'PCA on Stock Price')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 It may not be immediately clear which PCs we should select as the kink
 in the scree plot at PC3 may not be sufficient to explain the
@@ -232,7 +228,7 @@ replaced or sold.
 
     biplot(pca2, scale = TRUE, expand = 2)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
 We visualize the orthogonal variables for the first 2 PCs, using the
 above biplot.
@@ -280,7 +276,7 @@ told by the adjust R-squared indicator of 13.2%.
     par(mfrow = c(2, 2))
     plot(fit1)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png) From the
+![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png) From the
 diagnostic plots, we can see that the model does not follow that of a
 linear regression. There is a visible curve in the Normal Q-Q plots,
 thus it does not adhere to the dotted straight line. In the
@@ -298,7 +294,7 @@ drastically affect the overall analysis when removed.
 
     plot(stock.re[1:6], pch=16, col=rgb(0,0,0,0.5))
 
-![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
 Here are twelve 2-D projections of data which are in a 6-D space. You
 can see there’s a clear outlier in all the dimensions, as well as some
@@ -337,7 +333,7 @@ Comparing PC1, PC3 and PC4
          xlab = 'Number of clusters',
          ylab = 'WCSS')
 
-![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-13-1.png)
 
 So here we can see that the “elbow” in the scree plot is at k = 4, so we
 apply the k-means clustering function with k = 4 and plot.
@@ -350,7 +346,7 @@ apply the k-means clustering function with k = 4 and plot.
     palette(alpha(brewer.pal(9,'Set1'), 0.5))
     plot(comp[1:6], col=k$clust, pch=16)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-14-1.png)
 
 Here, few outliers, with 2 and 3. Lets visualize with 3d plot
 
@@ -372,31 +368,31 @@ Comparing PC4, PC5 and PC6 with K-mean clustering
 
     ## 
     ##   1   2   3   4 
-    ##   1 215  99   3
+    ## 159   1  84  74
 
     clust <- names(sort(table(k$clust)))
     clust
 
-    ## [1] "1" "4" "3" "2"
+    ## [1] "2" "4" "3" "1"
 
     head(k$clust)
 
     ##           Beijing Ultrapower Software Co.,LTD 
-    ##                                             2 
+    ##                                             1 
     ##  Lepu Medical Technology (Beijing) Co., Ltd.  
-    ##                                             2 
+    ##                                             1 
     ##               Toread Holdings Group Co., Ltd. 
     ##                                             3 
     ##            Henan Hanwei Electronics Co.,Ltd.  
-    ##                                             2 
+    ##                                             1 
     ## Bestway Marine & Energy Technology Co., Ltd.  
-    ##                                             2 
+    ##                                             4 
     ##    Anhui Anke Biotechnology (Group) Co., Ltd  
-    ##                                             2
+    ##                                             1
 
     hist(k$clust)
 
-![](README_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
 We Can Categorize different Clusters as
 
